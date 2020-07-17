@@ -32,7 +32,7 @@ export class createOrder1594086536392 implements MigrationInterface {
         name: 'observation',
         type: 'varchar',
         length: '255',
-        isNullable: false,
+        isNullable: true,
       },
       {
         name: 'adress',
@@ -44,7 +44,7 @@ export class createOrder1594086536392 implements MigrationInterface {
         name: 'reference',
         type: 'varchar',
         length: '255',
-        isNullable: false,
+        isNullable: true,
       },
       {
         name: 'whatsapp',
