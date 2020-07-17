@@ -30,6 +30,7 @@ const Main: React.FC = () => {
       try {
         const response = await api.get<IRestaurant>(`restaurant/${restaurantId}`)
         setRestaurantData(response.data)
+        console.log(response.data)
         localStorage.setItem('@restaurant', JSON.stringify(response.data))
         const whatsapp = search.split('?q=')[1]
         localStorage.setItem('@whatsapp', whatsapp)

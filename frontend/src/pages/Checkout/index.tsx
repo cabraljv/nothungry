@@ -20,7 +20,7 @@ interface IRestaurant{
 }
 const Checkout: React.FC = () => {
   const [name, setName] = useState<string>()
-  const { cart } = useCart()
+  const { cart, changeObservation } = useCart()
   useEffect(() => {
     const localData = localStorage.getItem('@restaurant')
     if (localData) {
@@ -53,7 +53,7 @@ const Checkout: React.FC = () => {
           ))
         }
         <h6>OBSERVAÇÕES</h6>
-        <textarea placeholder="Ex: sem salada..."></textarea>
+        <textarea placeholder="Ex: sem salada..." onChange={(e) => changeObservation(e.target.value)}></textarea>
         <div id="total">
           <p>TOTAL:</p>
           <p>R${total}</p>
