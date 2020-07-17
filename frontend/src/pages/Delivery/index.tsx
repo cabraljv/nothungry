@@ -58,7 +58,7 @@ const Delivery: React.FC = () => {
           <img src={require('../../assets/images/logo.svg')} alt=""/>
           <h1>{restaurantName}</h1>
         </div>
-        <h2>Carrinho</h2>
+        <h2>Finalizar</h2>
       </header>
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">NOME</label>
