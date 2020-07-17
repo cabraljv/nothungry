@@ -46,7 +46,7 @@ class OrderController {
       products,
     });
     await orderRepo.save(order);
-    return res.json({ ok: true });
+    return res.json({ response: 'Order successfull created' });
   }
 }
 
