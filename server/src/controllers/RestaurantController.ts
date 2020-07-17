@@ -48,6 +48,7 @@ class RestaurantController {
         'products.type',
         'restaurant.img_path',
         'restaurant.name',
+        'restaurant.id',
         'restaurant.phone',
       ])
       .getOne();
