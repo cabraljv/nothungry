@@ -5,6 +5,16 @@ import * as Yup from 'yup';
 import Order from '../models/Order';
 
 class OrderController {
+  async index(req: Request, res: Response){
+    const orderRepo = getRepository(Order);
+    const orders = await orderRepo
+      .createQueryBuilder('order')
+      .where({ restaurant: req.userId, concluided: false })
+      .leftJoinAndSelect('order.products', 'products')
+      .select(['order.adress','order.reference','products.name', 'products.id', 'order.id','order.observation','order.whatsapp','order.created_at','order.payment_method', 'order.accepted'])
+      .getMany()
+    return res.json(orders)
+  }
   async store(req: Request, res: Response) {
     const schema = Yup.object().shape({
       reciver: Yup.string().required(),

@@ -59,6 +59,12 @@ export class createOrder1594086536392 implements MigrationInterface {
         default: false,
       },
       {
+        name: 'concluided',
+        type: 'boolean',
+        isNullable: false,
+        default: false,
+      },
+      {
         name: 'payment_method',
         type: 'varchar',
         length: '255',

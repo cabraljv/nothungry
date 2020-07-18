@@ -23,6 +23,7 @@ routes.post('/order', OrderController.store);
 
 routes.post('/session', SessionController.store);
 routes.use(auth);
+routes.get('/order', OrderController.index)
 
 routes.post('/product', uploads.single('image'), ProductController.store);
 export default routes;

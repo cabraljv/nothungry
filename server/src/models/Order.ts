@@ -38,6 +38,9 @@ class Order {
   public accepted!: boolean;
 
   @Column()
+  public concluided!: boolean;
+
+  @Column()
   public payment_method!: string;
 
   @ManyToOne(() => Restaurant, restaurant => restaurant.orders)
