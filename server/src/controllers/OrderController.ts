@@ -11,7 +11,7 @@ class OrderController {
       .createQueryBuilder('order')
       .where({ restaurant: req.userId, concluided: false })
       .leftJoinAndSelect('order.products', 'products')
-      .select(['order.adress','order.reference','products.name', 'products.id', 'order.id','order.observation','order.whatsapp','order.created_at','order.payment_method', 'order.accepted'])
+      .select(['order.adress','order.reference','products.name', 'products.id', 'order.id','order.observation','order.whatsapp','order.created_at','order.payment_method', 'order.accepted', 'order.reciver'])
       .getMany()
     return res.json(orders)
   }
