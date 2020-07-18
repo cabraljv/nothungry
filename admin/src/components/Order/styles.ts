@@ -8,7 +8,7 @@ export const Container = styled.div`
   flex-direction: column;
   section{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 3fr;
     div{
       padding: 10px;
       p{

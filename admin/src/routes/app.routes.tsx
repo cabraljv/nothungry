@@ -4,14 +4,16 @@ import {Route} from 'react-router-dom';
 import Dashboard from '../pages/Dashboard';
 import Sidebar from '../components/Sidebar';
 import {Container} from './styles'
+import {ToastContainer} from 'react-toastify';
 
 export default function AppRoutes() {
   return (
     <>
       <Sidebar />
-        <Container>
+      <Container>
           <Route path="/" exact component={Dashboard} />
       </Container>
+      <ToastContainer />
     </>
   );
 }
