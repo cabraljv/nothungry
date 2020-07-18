@@ -49,6 +49,7 @@ export const Container = styled.div`
       background: linear-gradient(to bottom right, #43E97B 0%, #38F9D7 100%);
       border-radius: 10px;
       box-shadow: 0 4px 5px rgba(0,0,0,.2);
+      cursor: pointer;
     }
   }
 `;
