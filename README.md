@@ -30,5 +30,5 @@ $ cd admin
 $ yarn start
 ``` 
 
-Made with <3
+Made with 💜
 
