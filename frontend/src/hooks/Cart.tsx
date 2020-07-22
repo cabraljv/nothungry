@@ -14,6 +14,7 @@ interface ICartContext {
   changeObservation: (s:string) => void;
   addItem: (p:Product) => void;
   removeItem: (p:Product) => void;
+  clearCart: ()=>void;
 }
 
 const CartContextData = createContext<ICartContext>(
@@ -29,6 +30,9 @@ export const CartProvider: React.FC = ({ children }) => {
   function changeObservation (s: string) {
     setObservation(s)
   }
+  function clearCart(){
+    setCart([]);
+  }
   function removeItem (p: Product) {
     const aux = [...cart]
     for (let i = 0; i < aux.length; i++) {
@@ -42,7 +46,7 @@ export const CartProvider: React.FC = ({ children }) => {
   }
 
   return (
-    <CartContextData.Provider value={{ cart, addItem, removeItem, changeObservation, observation }}>
+    <CartContextData.Provider value={{ cart, addItem, removeItem, changeObservation, clearCart, observation }}>
       {children}
     </CartContextData.Provider>
   )
