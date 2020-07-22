@@ -1,6 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react'
+
 import { useCart } from '../../hooks/Cart'
+import {useHistory} from 'react-router-dom'
 import { Container } from './styles'
+
 import api from '../../services/api'
 const Delivery: React.FC = () => {
   const [whatsapp, setWhatsapp] = useState('')
@@ -8,10 +11,11 @@ const Delivery: React.FC = () => {
   const [name, setName] = useState('')
   const [reference, setReference] = useState('')
   const [payment, setPayment] = useState(1)
+  const history = useHistory();
 
   const [restaurantName, setRestaurantName] = useState<string>()
   const [restaurant_id, setRestaurantId] = useState<string>()
-  const { cart, observation } = useCart()
+  const { cart, observation, clearCart } = useCart()
   useEffect(() => {
     const localData = localStorage.getItem('@restaurant')
     const whatsappData = localStorage.getItem('@whatsapp')
@@ -36,7 +40,7 @@ const Delivery: React.FC = () => {
   ): Promise<void> {
     e.preventDefault()
     try {
-      const response = await api.post('order', {
+      await api.post('order', {
         reciver: name,
         adress,
         reference,
@@ -46,7 +50,8 @@ const Delivery: React.FC = () => {
         payment_method: payment,
         products: cart
       })
-      console.log(response.data)
+      clearCart();
+      history.push('finish')
     } catch (error) {
       console.log(error)
     }
