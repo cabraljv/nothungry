@@ -10,6 +10,7 @@ interface AuthContextData {
   signed: boolean;
   restaurant: Restaurant | null;
   loading: boolean;
+  token: string;
   signIn(phone: string, password: string): Promise<void>;
   signOut(): void;
 }
@@ -38,7 +39,7 @@ export const AuthProvider: React.FC = ({children}) => {
 
     loadStoragedData();
   }, []);
-
+  const token = localStorage.getItem('@nothungry:token') || '';
   const signIn = async (phone: string, password: string) => {
     try {
       const response = await api.post<ResponseSignInUser>('/session', {
@@ -65,7 +66,7 @@ export const AuthProvider: React.FC = ({children}) => {
 
   return (
     <AuthContext.Provider
-      value={{restaurant, signIn, signOut, signed: !!restaurant, loading}}>
+      value={{restaurant, signIn, signOut, token, signed: !!restaurant, loading}}>
       {children}
     </AuthContext.Provider>
   );
