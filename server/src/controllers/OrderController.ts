@@ -9,7 +9,7 @@ class OrderController {
     const orderRepo = getRepository(Order);
     const orders = await orderRepo
       .createQueryBuilder('order')
-      .where({ restaurant: req.userId, concluided: false })
+      .where({ restaurant: req.userId, concluided: false, accepted: true })
       .leftJoinAndSelect('order.products', 'products')
       .select(['order.adress','order.reference','products.name', 'products.id', 'order.id','order.observation','order.whatsapp','order.created_at','order.payment_method', 'order.accepted', 'order.reciver'])
       .getMany()
