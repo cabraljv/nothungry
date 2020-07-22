@@ -1,8 +1,34 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import { Container, Content } from './styles';
+interface Product{ 
+  id: string;
+  name: string;
+}
+interface IOrder{
+  products: Product[];
+  reciver: string;
+  adress: string;
+  observation: string;
+  reference?: string;
+  payment_method: number;
+  whatsapp: string;
+}
+interface Props{
+  order: IOrder
+}
 
-const OrderRequest: React.FC = () => {
+const OrderRequest: React.FC<Props> = ({order}) => {
+  const payment = useMemo(()=>{
+    switch(order.payment_method){
+      case 1:
+        return 'A VISTA'
+      case 2:
+        return 'Cartão de crédito'
+      case 3:
+        return 'Cartão de débito'
+    }
+  },[order.payment_method])
   return (
     <Container>
       <Content>
@@ -10,18 +36,21 @@ const OrderRequest: React.FC = () => {
         <div>
           <section>
             <div>
-              <p>X-BURGUER</p>
-              <p>X-BURGUER</p>
+              {
+                order.products.map((item)=>(
+                  <p key={item.id}>{item.name}</p>
+                ))
+              }
             </div>
             <div id="observation">
-              <p>Sem salada</p>
+            <p>{order.observation}</p>
             </div>
           </section>
           <section>
-            <p>João Victor Cabral</p>
-            <p id="phone">+5531984752284</p>
-            <p>Rua Direita, 97</p>
-            <p>Cartão de crédito</p>
+            <p>{order.reciver}</p>
+            <p id="phone">{order.whatsapp}</p>
+            <p>{order.reference}</p>
+            <p>{payment}</p>
             <div id="buttons">
               <button>RECUSAR</button>
               <button>ACEITAR</button>
