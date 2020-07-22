@@ -21,10 +21,10 @@ routes.get('/restaurant/:id', RestaurantController.show);
 routes.post('/whatsapp', WhatsappMessageController.recive);
 
 routes.post('/order', OrderController.store);
-routes.put('/order/accept/:orderId', OrderAcceptController.store);
 
 routes.post('/session', SessionController.store);
 routes.use(auth);
+routes.put('/order/accept/:orderId', OrderAcceptController.store);
 routes.get('/order', OrderController.index)
 
 routes.post('/product', uploads.single('image'), ProductController.store);
