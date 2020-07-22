@@ -13,6 +13,7 @@ interface Product{
   name: string;
 }
 interface IOrder{
+  id: string;
   products: Product[];
   reciver: string;
   adress: string;
@@ -24,7 +25,7 @@ interface IOrder{
 export default function AppRoutes() {
   const {token} = useAuth();
   const [socket, setSocket] = useState<SocketIOClient.Socket>();
-  const [newOrder, setNewOrder] = useState<IOrder>();
+  const [newOrder, setNewOrder] = useState<IOrder | null>(null);
 
   useEffect(()=>{
      
@@ -42,7 +43,7 @@ export default function AppRoutes() {
     <>
       <Sidebar />
       {
-        newOrder && <OrderRequest order={newOrder} />
+        newOrder && <OrderRequest order={newOrder} handleClose={()=>setNewOrder(null)}/>
       }
       <Container>
           <Route path="/" exact component={Dashboard} />

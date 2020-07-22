@@ -1,11 +1,13 @@
 import React, {useMemo} from 'react';
 
 import { Container, Content } from './styles';
+import api from '../../services/api'
 interface Product{ 
   id: string;
   name: string;
 }
 interface IOrder{
+  id: string;
   products: Product[];
   reciver: string;
   adress: string;
@@ -15,10 +17,11 @@ interface IOrder{
   whatsapp: string;
 }
 interface Props{
-  order: IOrder
+  order: IOrder;
+  handleClose: ()=>void;
 }
 
-const OrderRequest: React.FC<Props> = ({order}) => {
+const OrderRequest: React.FC<Props> = ({order, handleClose}) => {
   const payment = useMemo(()=>{
     switch(order.payment_method){
       case 1:
@@ -28,7 +31,13 @@ const OrderRequest: React.FC<Props> = ({order}) => {
       case 3:
         return 'Cartão de débito'
     }
-  },[order.payment_method])
+  },[order.payment_method]);
+
+  async function handleAccept(){
+    await api.put(`/order/accept/${order.id}`)
+    handleClose();
+  }
+
   return (
     <Container>
       <Content>
@@ -52,8 +61,8 @@ const OrderRequest: React.FC<Props> = ({order}) => {
             <p>{order.reference}</p>
             <p>{payment}</p>
             <div id="buttons">
-              <button>RECUSAR</button>
-              <button>ACEITAR</button>
+              <button onClick={handleClose}>RECUSAR</button>
+              <button onClick={handleAccept}>ACEITAR</button>
             </div>
           </section>
         </div>
