@@ -56,6 +56,9 @@ class OrderController {
       products,
     });
     await orderRepo.save(order);
+    const restaurantSocketId  = req.connectedClients[restaurant_id];
+    req.io.to(restaurantSocketId).emit('newOrder', order);
+
     return res.json({ response: 'Order successfull created' });
   }
 }
