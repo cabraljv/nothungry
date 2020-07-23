@@ -9,11 +9,17 @@ class OrderController {
     const orderRepo = getRepository(Order);
     const orders = await orderRepo
       .createQueryBuilder('order')
-      .where({ restaurant: req.userId, concluided: false, accepted: true })
+      .where({ restaurant: req.userId, concluided: false, accepted: true, denied: false })
       .leftJoinAndSelect('order.products', 'products')
       .select(['order.adress','order.reference','products.name', 'products.id', 'order.id','order.observation','order.whatsapp','order.created_at','order.payment_method', 'order.accepted', 'order.reciver'])
       .getMany()
-    return res.json(orders)
+      const pendingOrders = await orderRepo
+      .createQueryBuilder('order')
+      .where({ restaurant: req.userId, concluided: false, accepted: false, denied: false })
+      .leftJoinAndSelect('order.products', 'products')
+      .select(['order.adress','order.reference','products.name', 'products.id', 'order.id','order.observation','order.whatsapp','order.created_at','order.payment_method', 'order.accepted', 'order.reciver'])
+      .getMany()
+    return res.json({orders, pendingOrders})
   }
   async store(req: Request, res: Response) {
     const schema = Yup.object().shape({

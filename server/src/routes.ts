@@ -9,6 +9,8 @@ import SessionController from './controllers/SessionController';
 import WhatsappMessageController from './controllers/WhatsappMessageController';
 import auth from './middlewares/auth';
 import OrderAcceptController from './controllers/OrderAcceptController';
+import OrderDenyController from './controllers/OrderDenyController';
+import OrderFinishController from './controllers/OrderFinishController';
 
 const uploads = Multer(uploadConfig);
 const routes = Router();
@@ -25,6 +27,9 @@ routes.post('/order', OrderController.store);
 routes.post('/session', SessionController.store);
 routes.use(auth);
 routes.put('/order/accept/:orderId', OrderAcceptController.store);
+routes.put('/order/deny/:orderId', OrderDenyController.store);
+routes.put('/order/finish/:orderId', OrderFinishController.store);
+
 routes.get('/order', OrderController.index)
 
 routes.post('/product', uploads.single('image'), ProductController.store);
