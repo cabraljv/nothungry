@@ -10,6 +10,7 @@ import PendingOrder from '../../components/PendingOrder';
 interface Product {
   id: string;
   name: string;
+  price: number;
 }
 interface IOrder {
   id: string;
@@ -52,7 +53,6 @@ const Dashboard: React.FC = () => {
   }, [token]);
   useEffect(() => {
     socket?.on('newOrder', (order: IOrder) => {
-      console.log(order);
       setPending([...pending, order]);
     });
   }, [socket, pending]);

@@ -6,6 +6,7 @@ import api from '../../services/api';
 interface Product {
   id: string;
   name: string;
+  price: number;
 }
 interface IOrder {
   data: {
@@ -39,6 +40,12 @@ const PendingOrder: React.FC<IOrder> = ({ data, onUpdate }) => {
     }
   }, [data.payment_method]);
 
+  const total = useMemo(() => {
+    let aux = 0;
+    data.products.forEach((item) => (aux += item.price));
+    return aux.toLocaleString('pt-br', { minimumFractionDigits: 2 });
+  }, [data.products]);
+
   async function handleAccept() {
     await api.put(`/order/accept/${data.id}`);
     onUpdate();
@@ -62,6 +69,10 @@ const PendingOrder: React.FC<IOrder> = ({ data, onUpdate }) => {
           <p>{data.adress}</p>
           <p>{data.reference}</p>
           <p>{payment}</p>
+          <p>
+            <strong>TOTAL: </strong>
+            R${total}
+          </p>
           <div className="buttons">
             <button type="button" onClick={handleDeny}>
               RECUSAR
