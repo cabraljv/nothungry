@@ -49,6 +49,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       });
 
       const { token: token_api, restaurant: restaurant_api } = response.data;
+      setRestaurant(restaurant);
       localStorage.setItem('@nothungry:token', token_api);
       localStorage.setItem(
         '@nothungry:restaurant',
@@ -56,7 +57,6 @@ export const AuthProvider: React.FC = ({ children }) => {
       );
 
       api.defaults.headers.Authorization = `Bearer ${token}`;
-      setRestaurant(restaurant);
     } catch (error) {
       toast('Login ou senha inválidos', { type: 'error' });
     }
