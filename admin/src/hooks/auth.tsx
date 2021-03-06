@@ -1,4 +1,5 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import api from '../services/api';
 
 interface Restaurant {
@@ -21,7 +22,7 @@ interface ResponseSignInUser {
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-export const AuthProvider: React.FC = ({children}) => {
+export const AuthProvider: React.FC = ({ children }) => {
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -47,14 +48,17 @@ export const AuthProvider: React.FC = ({children}) => {
         password,
       });
 
-      const {token, restaurant} = response.data;
-      localStorage.setItem('@nothungry:token', token);
-      localStorage.setItem('@nothungry:restaurant', JSON.stringify(restaurant));
+      const { token: token_api, restaurant: restaurant_api } = response.data;
+      localStorage.setItem('@nothungry:token', token_api);
+      localStorage.setItem(
+        '@nothungry:restaurant',
+        JSON.stringify(restaurant_api)
+      );
 
       api.defaults.headers.Authorization = `Bearer ${token}`;
       setRestaurant(restaurant);
     } catch (error) {
-      console.log(error);
+      toast('Login ou senha inválidos', { type: 'error' });
     }
   };
 
@@ -66,7 +70,15 @@ export const AuthProvider: React.FC = ({children}) => {
 
   return (
     <AuthContext.Provider
-      value={{restaurant, signIn, signOut, token, signed: !!restaurant, loading}}>
+      value={{
+        restaurant,
+        signIn,
+        signOut,
+        token,
+        signed: !!restaurant,
+        loading,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

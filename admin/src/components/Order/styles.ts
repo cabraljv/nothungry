@@ -6,41 +6,40 @@ export const Container = styled.div`
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  section{
+  section {
     display: grid;
     grid-template-columns: 2fr 3fr;
-    div{
+    div {
       padding: 10px;
-      p{
+      p {
         font-size: 1rem;
         padding: 3px;
-        color: #E8E8E8;
+        color: #e8e8e8;
       }
-      h4{
+      h4 {
         font-size: 1.2rem;
         font-weight: normal;
       }
-      h5{
+      h5 {
         font-size: 0.9rem;
         font-weight: normal;
         margin-bottom: 10px;
       }
-      button{
+      button {
         width: 100%;
         height: 40px;
         font-weight: bold;
         color: #fff;
-        background: linear-gradient(to bottom right, #FF5858 0%, #F09819 100%);
+        background: linear-gradient(to bottom right, #ff5858 0%, #f09819 100%);
         border: 0;
         border-radius: 5px;
         margin-top: 20px;
         cursor: pointer;
       }
-
     }
   }
-  footer{
-    width:100%;
+  footer {
+    width: 100%;
     height: 100px;
     margin-top: auto;
     border-radius: 0 0 10px 10px;

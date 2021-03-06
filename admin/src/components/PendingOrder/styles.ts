@@ -6,30 +6,30 @@ export const Container = styled.div`
   border-radius: 10px;
   display: flex;
   flex-direction: column;
-  section{
+  section {
     display: grid;
     grid-template-columns: 2fr 3fr;
-    div{
+    div {
       padding: 10px;
-      p{
+      p {
         font-size: 1rem;
         padding: 3px;
-        color: #E8E8E8;
+        color: #e8e8e8;
       }
-      h4{
+      h4 {
         font-size: 1.2rem;
         font-weight: normal;
       }
-      h5{
+      h5 {
         font-size: 0.9rem;
         font-weight: normal;
         margin-bottom: 10px;
       }
-      div.buttons{
+      div.buttons {
         display: grid;
         grid-template-columns: 1fr 1fr;
         grid-gap: 5px;
-        button{
+        button {
           width: 100%;
           height: 40px;
           font-weight: bold;
@@ -39,20 +39,23 @@ export const Container = styled.div`
           margin-top: 20px;
           cursor: pointer;
         }
-        button:first-child{
-          color: #F09819;
+        button:first-child {
+          color: #f09819;
           background: transparent;
         }
-        button:last-child{
+        button:last-child {
           color: #666666;
-          background: linear-gradient(to bottom right, #43E97B 0%, #38F9D7 100%);
+          background: linear-gradient(
+            to bottom right,
+            #43e97b 0%,
+            #38f9d7 100%
+          );
         }
       }
-
     }
   }
-  footer{
-    width:100%;
+  footer {
+    width: 100%;
     height: 100px;
     margin-top: auto;
     border-radius: 0 0 10px 10px;
