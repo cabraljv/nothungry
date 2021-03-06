@@ -22,17 +22,12 @@ class OrderFinishController {
       }
       order.concluided = true;
       orderRepo.save(order);
-      if (
-        !(await sendMessage(
-          order.restaurant.whatsapp_number,
-          order.user.whatsapp,
-          'Seu pedido foi concluído!',
-        ))
-      ) {
-        return res
-          .status(502)
-          .json({ error: 'Order finished, but client not notificated' });
-      }
+      sendMessage(
+        order.restaurant.whatsapp_number,
+        order.user.whatsapp,
+        'Seu pedido foi concluído!',
+      );
+
       return res.json({ response: 'Order successfull finished' });
     }
     return res.status(500).json({ error: 'Error on finish order' });
