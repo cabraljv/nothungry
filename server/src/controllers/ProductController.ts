@@ -12,7 +12,7 @@ class ProductControler {
       price: Yup.string().required(),
       type: Yup.number().required(),
     });
-    if (!(await schema.validate(req.body)))
+    if (!(await schema.isValid(req.body)))
       return res.status(400).json({ error: 'Invalid fields' });
 
     const productRepo = getRepository(Product);
@@ -24,7 +24,7 @@ class ProductControler {
         price,
         type,
         restaurant: req.userId,
-        img_path: `${process.env.APP_URL}/files/${req.file.filename}`,
+        img_path: `${process.env.APP_URL}/files/${req.file.filename}.jpg`,
       });
       await productRepo.save(product);
     } catch (error) {

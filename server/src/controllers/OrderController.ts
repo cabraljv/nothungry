@@ -3,6 +3,7 @@ import { getRepository } from 'typeorm';
 import * as Yup from 'yup';
 
 import Order from '../models/Order';
+import { sendMessage } from '../services/WhatsApp';
 
 class OrderController {
   async index(req: Request, res: Response) {
@@ -61,13 +62,17 @@ class OrderController {
       id: Yup.string().required(),
       reciver: Yup.string().required(),
       adress: Yup.string().required(),
-      observation: Yup.string().required(),
-      reference: Yup.string().required(),
+      observation: Yup.string(),
+      reference: Yup.string(),
       payment_method: Yup.number().required(),
       products: Yup.array().required(),
     });
-    if (!(await schema.validate(req.body)))
-      return res.json({ error: 'Invalid fields' });
+    try {
+      await schema.validate(req.body);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: error.errors });
+    }
 
     const orderRepo = getRepository(Order);
     const {
@@ -83,12 +88,11 @@ class OrderController {
     for (let i = 0; i < products.length; i += 1) {
       total += products[i].price;
     }
-    console.log(id);
 
     try {
       const order = await orderRepo.findOne({
         where: { id },
-        relations: ['restaurant'],
+        relations: ['restaurant', 'user'],
       });
 
       if (!order) {
@@ -101,18 +105,24 @@ class OrderController {
       order.adress = adress;
       order.payment_method = payment_method;
       order.reciver = reciver;
-      order.observation = observation;
+      order.observation = observation || '';
       order.products = products;
-      order.reference = reference;
+      order.reference = reference || '';
       order.total = total;
 
       orderRepo.save(order);
-      console.log(order);
       await orderRepo.save(order);
       if (typeof order.restaurant !== 'string') {
         const restaurantSocketId = req.connectedClients[order.restaurant.id];
         req.io.to(restaurantSocketId).emit('newOrder', order);
       }
+      await sendMessage(
+        typeof order.restaurant !== 'string'
+          ? order.restaurant.whatsapp_number
+          : '',
+        order.user.whatsapp,
+        '*Seu pedido foi enviado para o restaurante!*',
+      );
       return res.json({ response: 'Order successfull created' });
     } catch (error) {
       return res.status(500).json({ error });

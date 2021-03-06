@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Content } from './styles';
 import CheckoutItem from '../../components/CheckoutItem';
@@ -23,6 +23,14 @@ const Checkout: React.FC = () => {
 
     return aux.toLocaleString('pt-br', { minimumFractionDigits: 2 });
   }, [cart]);
+
+  const onChangeObservation = useCallback(
+    (e) => {
+      changeObservation(e);
+    },
+    [changeObservation]
+  );
+
   return (
     <Container>
       <header>
@@ -34,13 +42,13 @@ const Checkout: React.FC = () => {
       </header>
       <Content>
         <h6>PEDIDO</h6>
-        {cart.map((item) => (
-          <CheckoutItem data={item} key={item.id} />
+        {cart.map((item, index) => (
+          <CheckoutItem data={item} key={`${item.id} ${index}`} />
         ))}
         <h6>OBSERVAÇÕES</h6>
         <textarea
           placeholder="Ex: sem salada..."
-          onChange={(e) => changeObservation(e.target.value)}
+          onChange={(e) => onChangeObservation(e.target.value)}
         />
         <div id="total">
           <p>TOTAL:</p>

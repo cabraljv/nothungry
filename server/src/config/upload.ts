@@ -7,7 +7,7 @@ export default {
     destination: path.resolve(__dirname, '..', '..', 'tmp', 'uploads'),
     filename(req, file, cb) {
       const filename = crypto.randomBytes(18).toString('hex');
-      const fileExtension = file.originalname.split('.')[1];
+      const fileExtension = 'jpg';
       cb(null, `${filename}.${fileExtension}`);
     },
   }),

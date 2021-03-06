@@ -14,7 +14,7 @@ class RestaurantController {
       url: Yup.string().required(),
       whatsapp_number: Yup.string().required(),
     });
-    if (!(await schema.validate(req.body))) {
+    if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Invalid fields' });
     }
     const { name, phone, password, url, whatsapp_number } = req.body;

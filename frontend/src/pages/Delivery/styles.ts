@@ -1,6 +1,21 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+interface Props {
+  loading?: boolean;
+}
+
+export const Container = styled.div<Props>`
+  div.loading {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: ${(p) => (p.loading ? 'flex' : 'none')};
+    align-items: center;
+    justify-content: center;
+  }
   header {
     display: flex;
     height: 130px;
@@ -41,6 +56,9 @@ export const Container = styled.div`
       background-color: #858585;
       padding: 0 5px;
       color: #fff;
+    }
+    input.wrong-input {
+      border: 1px solid red;
     }
     p {
       margin-top: 15px;

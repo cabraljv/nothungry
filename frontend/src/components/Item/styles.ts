@@ -1,15 +1,17 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
   background-color: #666666;
   margin: 10px 30px;
   border-radius: 15px;
-  height: 80px;
+  height: 100%;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.4);
   img {
-    height: 80px;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
     border-radius: 15px 0 0 15px;
   }
 

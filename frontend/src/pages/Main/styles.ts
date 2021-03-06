@@ -60,14 +60,20 @@ export const Container = styled.div`
         width: 100%;
         justify-content: center;
         align-items: center;
+        background: none;
+        border: 0;
         border-bottom: 3px solid #2d2d2d;
         p {
           padding-bottom: 20px;
           font-weight: bold;
+          color: rgba(255, 255, 255, 0.6);
         }
       }
       button.selected {
         border-bottom: 3px solid #3bf4bc;
+        p {
+          color: #3bf4bc;
+        }
       }
     }
   }

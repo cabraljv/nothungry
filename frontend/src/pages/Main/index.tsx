@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { Container, Content } from './styles';
 import api from '../../services/api';
 import Item from '../../components/Item';
@@ -32,24 +33,31 @@ const Main: React.FC = () => {
   const [restaurantData, setRestaurantData] = useState<IRestaurant>();
   const [productFilter, setProductFilter] = useState(1);
   const { search } = useLocation();
-  const { cart } = useCart();
+  const { cart, changeOrder } = useCart();
+  function useQuery() {
+    return new URLSearchParams(search);
+  }
+  const order = useQuery().get('order');
+
   useEffect(() => {
-    async function getRestaurantdata() {
+    async function getRestaurantData() {
       try {
         const response = await api.get<IRestaurant>(
           `restaurant/${restaurantId}`
         );
         setRestaurantData(response.data);
-        console.log(response.data);
         localStorage.setItem('@restaurant', JSON.stringify(response.data));
         const whatsapp = search.split('?q=')[1];
         localStorage.setItem('@whatsapp', whatsapp);
       } catch (error) {
-        console.log(error);
+        toast(error, { type: 'error' });
       }
     }
-    getRestaurantdata();
-  }, [restaurantId, search]);
+    if (order) {
+      changeOrder(order);
+    }
+    getRestaurantData();
+  }, [restaurantId, search, order, changeOrder]);
   const cartLength = useMemo(() => cart.length, [cart]);
   return (
     <Container>

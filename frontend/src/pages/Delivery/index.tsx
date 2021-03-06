@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
 import { useCart } from '../../hooks/Cart';
 import { Container } from './styles';
 import logo from '../../assets/images/logo.svg';
@@ -12,13 +14,15 @@ const Delivery: React.FC = () => {
   const [whatsapp, setWhatsapp] = useState('');
   const [adress, setAdress] = useState('');
   const [name, setName] = useState('');
+  const [wrongFields, setWrongFields] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
   const [reference, setReference] = useState('');
   const [payment, setPayment] = useState(1);
   const history = useHistory();
 
   const [restaurantName, setRestaurantName] = useState<string>();
   const [restaurant_id, setRestaurantId] = useState<string>();
-  const { cart, observation, clearCart } = useCart();
+  const { cart, observation, clearCart, order } = useCart();
   useEffect(() => {
     const localData = localStorage.getItem('@restaurant');
     const whatsappData = localStorage.getItem('@whatsapp');
@@ -36,29 +40,68 @@ const Delivery: React.FC = () => {
     });
     return aux.toLocaleString('pt-br', { minimumFractionDigits: 2 });
   }, [cart]);
-  async function handleSubmit(
-    e: React.FormEvent<HTMLFormElement>
-  ): Promise<void> {
-    e.preventDefault();
-    try {
-      await api.post('order', {
-        reciver: name,
-        adress,
-        reference,
-        whatsapp,
-        observation,
-        restaurant_id,
-        payment_method: payment,
-        products: cart,
-      });
-      clearCart();
-      history.push('finish');
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+      e.preventDefault();
+      setLoading(true);
+      let aux: string[] = [];
+      if (name.length < 5) {
+        aux.push('name');
+      }
+      if (adress.length < 5) {
+        aux.push('adress');
+      }
+      if (aux.length > 0) {
+        setWrongFields(aux);
+        toast('Preencha todos os campos corretamente', { type: 'error' });
+        setLoading(false);
+        return;
+      }
+      if (order === '') {
+        toast('Pedido inválido! inicie novamente', { type: 'error' });
+        setLoading(false);
+        return;
+      }
+      const cart_items = cart.map((item) => item.id);
+
+      try {
+        await api.post('order', {
+          reciver: name,
+          adress,
+          id: order,
+          reference,
+          whatsapp,
+          observation,
+          restaurant_id,
+          payment_method: payment,
+          products: cart_items,
+        });
+        clearCart();
+        history.push('finish');
+      } catch (error) {
+        toast(error, { type: 'error' });
+      }
+      setLoading(false);
+    },
+    [
+      adress,
+      reference,
+      whatsapp,
+      observation,
+      restaurant_id,
+      payment,
+      cart,
+      order,
+      clearCart,
+      history,
+      name,
+    ]
+  );
   return (
-    <Container>
+    <Container loading={loading}>
+      <div className="loading">
+        <ClipLoader color="#3bf4bc" loading size={100} />
+      </div>
       <header>
         <div>
           <img src={logo} alt="Not Hungry" />
@@ -72,6 +115,7 @@ const Delivery: React.FC = () => {
           type="text"
           name="name"
           id="name"
+          className={wrongFields.includes('name') ? 'wrong-input' : ''}
           onChange={(e) => setName(e.target.value)}
         />
         <label htmlFor="adress">ENDEREÇO DE ENTREGA</label>
@@ -79,13 +123,14 @@ const Delivery: React.FC = () => {
           type="text"
           name="adress"
           id="adress"
+          className={wrongFields.includes('adress') ? 'wrong-input' : ''}
           onChange={(e) => setAdress(e.target.value)}
         />
-        <label htmlFor="adress">REFERÊNCIA (se houver)</label>
+        <label htmlFor="reference">REFERÊNCIA (se houver)</label>
         <input
           type="text"
-          name="adress"
-          id="adress"
+          name="reference"
+          id="reference"
           onChange={(e) => setReference(e.target.value)}
         />
         <p>PAGEMENTO</p>
