@@ -10,6 +10,7 @@ import {
 
 import Product from './Product';
 import Restaurant from './Restaurant';
+import User from './User';
 
 @Entity({ name: 'orders' })
 class Order {
@@ -26,9 +27,6 @@ class Order {
   public observation!: string;
 
   @Column()
-  public whatsapp!: string;
-
-  @Column()
   public adress!: string;
 
   @Column()
@@ -36,6 +34,9 @@ class Order {
 
   @Column()
   public accepted!: boolean;
+
+  @Column()
+  public sended!: boolean;
 
   @Column()
   public concluided!: boolean;
@@ -49,6 +50,10 @@ class Order {
   @ManyToOne(() => Restaurant, restaurant => restaurant.orders)
   @JoinColumn({ name: 'restaurant_id' })
   public restaurant!: Restaurant | string;
+
+  @ManyToOne(() => User, user => user.orders)
+  @JoinColumn({ name: 'user_id' })
+  public user!: User;
 
   @Column()
   public created_at!: Date;

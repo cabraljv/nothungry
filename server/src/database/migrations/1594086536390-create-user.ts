@@ -1,8 +1,8 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class createRestaurant1594084465187 implements MigrationInterface {
+export class createUser1594086536390 implements MigrationInterface {
   private table = new Table({
-    name: 'restaurants',
+    name: 'users',
     columns: [
       {
         name: 'id',
@@ -13,46 +13,16 @@ export class createRestaurant1594084465187 implements MigrationInterface {
         type: 'uuid',
       },
       {
-        name: 'password',
-        type: 'varchar',
-        length: '100',
-        isNullable: false,
-      },
-      {
-        name: 'name',
-        type: 'varchar',
-        length: '100',
-        isNullable: false,
-      },
-      {
-        name: 'phone',
-        type: 'varchar',
-        length: '20',
-        isNullable: false,
-      },
-      {
-        name: 'img_path',
-        type: 'varchar',
-        length: '255',
-        isNullable: false,
-      },
-      {
-        name: 'whatsapp_number',
-        type: 'varchar',
-        length: '255',
-        isNullable: false,
-      },
-      {
-        name: 'url',
+        name: 'whatsapp',
         type: 'varchar',
         length: '50',
         isNullable: false,
       },
       {
-        name: 'open',
-        type: 'boolean',
+        name: 'name',
+        type: 'varchar',
+        length: '50',
         isNullable: false,
-        default: false,
       },
       {
         name: 'created_at',
@@ -70,7 +40,6 @@ export class createRestaurant1594084465187 implements MigrationInterface {
   });
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
     await queryRunner.createTable(this.table);
   }
 
