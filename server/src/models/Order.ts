@@ -53,17 +53,17 @@ class Order {
 
   @ManyToOne(() => User, user => user.orders)
   @JoinColumn({ name: 'user_id' })
-  public user!: User;
+  public user: User;
 
   @Column()
-  public created_at!: Date;
+  public created_at: Date;
 
   @Column()
-  public updated_at!: Date;
+  public updated_at: Date;
 
   @ManyToMany(() => Product)
   @JoinTable()
-  products: Product[];
+  public products: Product[];
 }
 
 export default Order;

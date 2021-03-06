@@ -1,8 +1,10 @@
+import { subDays } from 'date-fns';
 import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
+import { getRepository, MoreThan } from 'typeorm';
 import * as Yup from 'yup';
 
 import Order from '../models/Order';
+import Product from '../models/Product';
 import { sendMessage } from '../services/WhatsApp';
 
 class OrderController {
@@ -17,14 +19,17 @@ class OrderController {
         denied: false,
       })
       .leftJoinAndSelect('order.products', 'products')
+      .leftJoinAndSelect('order.user', 'user')
       .select([
         'order.adress',
         'order.reference',
         'products.name',
         'products.id',
+        'products.price',
         'order.id',
         'order.observation',
-        'order.whatsapp',
+        'user.whatsapp',
+        'user.name',
         'order.created_at',
         'order.payment_method',
         'order.accepted',
@@ -38,16 +43,20 @@ class OrderController {
         concluided: false,
         accepted: false,
         denied: false,
+        created_at: MoreThan(subDays(new Date(), 1)),
       })
       .leftJoinAndSelect('order.products', 'products')
+      .leftJoinAndSelect('order.user', 'user')
       .select([
         'order.adress',
         'order.reference',
         'products.name',
         'products.id',
+        'products.price',
         'order.id',
         'order.observation',
-        'order.whatsapp',
+        'user.whatsapp',
+        'user.name',
         'order.created_at',
         'order.payment_method',
         'order.accepted',
@@ -84,9 +93,14 @@ class OrderController {
       payment_method,
       products,
     } = req.body;
+
+    const productsRepo = getRepository(Product);
+
+    const products_db = await productsRepo.findByIds(products);
+
     let total = 0;
-    for (let i = 0; i < products.length; i += 1) {
-      total += products[i].price;
+    for (let i = 0; i < products_db.length; i += 1) {
+      total += products_db[i].price;
     }
 
     try {
@@ -106,14 +120,14 @@ class OrderController {
       order.payment_method = payment_method;
       order.reciver = reciver;
       order.observation = observation || '';
-      order.products = products;
+      order.products = products_db;
       order.reference = reference || '';
       order.total = total;
-
-      orderRepo.save(order);
+      console.log(order.products);
       await orderRepo.save(order);
       if (typeof order.restaurant !== 'string') {
         const restaurantSocketId = req.connectedClients[order.restaurant.id];
+
         req.io.to(restaurantSocketId).emit('newOrder', order);
       }
       await sendMessage(
@@ -125,6 +139,7 @@ class OrderController {
       );
       return res.json({ response: 'Order successfull created' });
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ error });
     }
   }
