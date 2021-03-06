@@ -1,12 +1,12 @@
-import React from 'react'
-import { Route } from 'react-router-dom'
+import React from 'react';
+import { Route } from 'react-router-dom';
 
-import Main from './pages/Main'
-import Delivery from './pages/Delivery'
-import Checkout from './pages/Checkout'
-import Finish from './pages/Finish'
+import Main from './pages/Main';
+import Delivery from './pages/Delivery';
+import Checkout from './pages/Checkout';
+import Finish from './pages/Finish';
 
-import { CartProvider } from './hooks/Cart'
+import { CartProvider } from './hooks/Cart';
 
 const Routes: React.FC = () => {
   return (
@@ -18,7 +18,7 @@ const Routes: React.FC = () => {
         <Route path="/:restaurantId/finish" exact component={Finish} />
       </CartProvider>
     </>
-  )
-}
+  );
+};
 
-export default Routes
+export default Routes;

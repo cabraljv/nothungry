@@ -1,44 +1,45 @@
-import React, { useEffect, useState, useMemo } from 'react'
+/* eslint-disable jsx-a11y/label-has-associated-control */
+import React, { useEffect, useState, useMemo } from 'react';
 
-import { useCart } from '../../hooks/Cart'
-import {useHistory} from 'react-router-dom'
-import { Container } from './styles'
+import { useHistory } from 'react-router-dom';
+import { useCart } from '../../hooks/Cart';
+import { Container } from './styles';
+import logo from '../../assets/images/logo.svg';
 
-import api from '../../services/api'
+import api from '../../services/api';
+
 const Delivery: React.FC = () => {
-  const [whatsapp, setWhatsapp] = useState('')
-  const [adress, setAdress] = useState('')
-  const [name, setName] = useState('')
-  const [reference, setReference] = useState('')
-  const [payment, setPayment] = useState(1)
+  const [whatsapp, setWhatsapp] = useState('');
+  const [adress, setAdress] = useState('');
+  const [name, setName] = useState('');
+  const [reference, setReference] = useState('');
+  const [payment, setPayment] = useState(1);
   const history = useHistory();
 
-  const [restaurantName, setRestaurantName] = useState<string>()
-  const [restaurant_id, setRestaurantId] = useState<string>()
-  const { cart, observation, clearCart } = useCart()
+  const [restaurantName, setRestaurantName] = useState<string>();
+  const [restaurant_id, setRestaurantId] = useState<string>();
+  const { cart, observation, clearCart } = useCart();
   useEffect(() => {
-    const localData = localStorage.getItem('@restaurant')
-    const whatsappData = localStorage.getItem('@whatsapp')
+    const localData = localStorage.getItem('@restaurant');
+    const whatsappData = localStorage.getItem('@whatsapp');
     if (localData && whatsappData) {
-      const restaurant = JSON.parse(localData)
-      console.log(restaurant.id)
-      setRestaurantName(restaurant.name)
-      setRestaurantId(restaurant.id)
-      setWhatsapp(whatsappData)
+      const restaurant = JSON.parse(localData);
+      setRestaurantName(restaurant.name);
+      setRestaurantId(restaurant.id);
+      setWhatsapp(whatsappData);
     }
-  }, [])
+  }, []);
   const total = useMemo(() => {
-    let aux = 0
-    for (let i = 0; i < cart.length; i++) {
-      aux += cart[i].price
-    }
-    console.log(cart.length)
-    return aux.toLocaleString('pt-br', { minimumFractionDigits: 2 })
-  }, [cart])
-  async function handleSubmit (
+    let aux = 0;
+    cart.forEach((item) => {
+      aux += item.price;
+    });
+    return aux.toLocaleString('pt-br', { minimumFractionDigits: 2 });
+  }, [cart]);
+  async function handleSubmit(
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> {
-    e.preventDefault()
+    e.preventDefault();
     try {
       await api.post('order', {
         reciver: name,
@@ -48,50 +49,86 @@ const Delivery: React.FC = () => {
         observation,
         restaurant_id,
         payment_method: payment,
-        products: cart
-      })
+        products: cart,
+      });
       clearCart();
-      history.push('finish')
+      history.push('finish');
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  };
+  }
   return (
-    <Container >
+    <Container>
       <header>
         <div>
-          <img src={require('../../assets/images/logo.svg')} alt=""/>
+          <img src={logo} alt="Not Hungry" />
           <h1>{restaurantName}</h1>
         </div>
         <h2>Finalizar</h2>
       </header>
       <form onSubmit={handleSubmit}>
         <label htmlFor="name">NOME</label>
-        <input type="text" name="name" id="name" onChange={(e) => setName(e.target.value)}/>
+        <input
+          type="text"
+          name="name"
+          id="name"
+          onChange={(e) => setName(e.target.value)}
+        />
         <label htmlFor="adress">ENDEREÇO DE ENTREGA</label>
-        <input type="text" name="adress" id="adress" onChange={(e) => setAdress(e.target.value)} />
+        <input
+          type="text"
+          name="adress"
+          id="adress"
+          onChange={(e) => setAdress(e.target.value)}
+        />
         <label htmlFor="adress">REFERÊNCIA (se houver)</label>
-        <input type="text" name="adress" id="adress" onChange={(e) => setReference(e.target.value)} />
+        <input
+          type="text"
+          name="adress"
+          id="adress"
+          onChange={(e) => setReference(e.target.value)}
+        />
         <p>PAGEMENTO</p>
         <div>
-          <input type="radio" name="payment" id="money" defaultChecked value={1} onChange={(e) => setPayment(parseInt(e.target.value))} />
-          <label htmlFor="money" >A VISTA</label>
+          <input
+            type="radio"
+            name="payment"
+            id="money"
+            defaultChecked
+            value={1}
+            onChange={(e) => setPayment(parseInt(e.target.value, 10))}
+          />
+          <label htmlFor="money">A VISTA</label>
         </div>
         <div>
-          <input type="radio" name="payment" id="creditcard" value={2} onChange={(e) => setPayment(parseInt(e.target.value))}/>
+          <input
+            type="radio"
+            name="payment"
+            id="creditcard"
+            value={2}
+            onChange={(e) => setPayment(parseInt(e.target.value, 10))}
+          />
           <label htmlFor="creditcard">CARTÃO DE CRÉDITO</label>
         </div>
         <div>
-          <input type="radio" name="payment" id="debitcard" value={3} onChange={(e) => setPayment(parseInt(e.target.value))}/>
+          <input
+            type="radio"
+            name="payment"
+            id="debitcard"
+            value={3}
+            onChange={(e) => setPayment(parseInt(e.target.value, 10))}
+          />
           <label htmlFor="debitcard">CARTÃO DE DÉBITO</label>
         </div>
         <section>
-          <p>TOTAL: <span>R${total}</span></p>
+          <p>
+            TOTAL: <span>R${total}</span>
+          </p>
         </section>
         <button type="submit">FINALIZAR</button>
       </form>
     </Container>
-  )
-}
+  );
+};
 
-export default Delivery
+export default Delivery;

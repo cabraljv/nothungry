@@ -1,35 +1,39 @@
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 export const Container = styled.div`
   max-width: 600px;
   margin: 0 auto;
-  header{
-    background-color: #2D2D2D;
+  header {
+    background-color: #2d2d2d;
     width: 100%;
     position: fixed;
     top: 0;
-    section{
+    section {
       height: 100px;
       width: 100%;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
       padding: 0 30px;
-      a{
+      a {
         text-decoration: none;
         display: flex;
         align-items: center;
       }
-      div{
+      div {
         display: flex;
         flex-direction: row;
         align-items: center;
-        h1{
-          color: #3BF4BC;
+        h1 {
+          color: #3bf4bc;
           margin-left: 10px;
         }
-        span{
-          background: linear-gradient(to bottom right, #43E97B 0%, #38F9D7 100%);
+        span {
+          background: linear-gradient(
+            to bottom right,
+            #43e97b 0%,
+            #38f9d7 100%
+          );
           width: 15px;
           height: 15px;
           border-radius: 20px;
@@ -38,7 +42,7 @@ export const Container = styled.div`
           justify-content: center;
           margin-left: -10px;
           margin-top: 17px;
-          p{
+          p {
             color: #333;
             border-radius: 15px;
             font-size: 0.6rem;
@@ -47,27 +51,27 @@ export const Container = styled.div`
         }
       }
     }
-    nav{
+    nav {
       display: grid;
       grid-template-columns: 1fr 1fr;
       width: 100%;
-      div{
+      button {
         display: flex;
         width: 100%;
         justify-content: center;
         align-items: center;
-        border-bottom: 3px solid #2D2D2D;
-        p{
+        border-bottom: 3px solid #2d2d2d;
+        p {
           padding-bottom: 20px;
           font-weight: bold;
         }
       }
-      div.selected{
-        border-bottom: 3px solid #3BF4BC;
+      button.selected {
+        border-bottom: 3px solid #3bf4bc;
       }
     }
   }
-`
+`;
 export const Content = styled.section`
   margin-top: 150px;
-`
+`;
