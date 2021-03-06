@@ -21,7 +21,10 @@ const Item: React.FC<Props> = ({ data }) => {
     () => data.price.toLocaleString('pt-br', { minimumFractionDigits: 2 }),
     [data.price]
   );
-  const itensInCart = cart.filter((item) => item === data).length;
+  const itensInCart = useMemo(
+    () => cart.filter((item) => item.id === data.id).length,
+    [cart, data]
+  );
   return (
     <Container>
       <img src={data.img_path} alt="" />

@@ -43,6 +43,7 @@ const Checkout: React.FC = () => {
       <Content>
         <h6>PEDIDO</h6>
         {cart.map((item, index) => (
+          // eslint-disable-next-line react/no-array-index-key
           <CheckoutItem data={item} key={`${item.id} ${index}`} />
         ))}
         <h6>OBSERVAÇÕES</h6>
