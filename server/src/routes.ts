@@ -33,4 +33,5 @@ routes.put('/order/finish/:orderId', OrderFinishController.store);
 routes.get('/order', OrderController.index);
 
 routes.post('/product', uploads.single('image'), ProductController.store);
+routes.get('/product', ProductController.index);
 export default routes;
