@@ -16,6 +16,7 @@ class OrderController {
         restaurant: req.userId,
         concluided: false,
         accepted: true,
+        sended: true,
         denied: false,
       })
       .leftJoinAndSelect('order.products', 'products')
@@ -43,6 +44,7 @@ class OrderController {
         concluided: false,
         accepted: false,
         denied: false,
+        sended: true,
         created_at: MoreThan(subDays(new Date(), 1)),
       })
       .leftJoinAndSelect('order.products', 'products')
@@ -79,7 +81,6 @@ class OrderController {
     try {
       await schema.validate(req.body);
     } catch (error) {
-      console.log(error);
       return res.status(400).json({ error: error.errors });
     }
 
@@ -122,8 +123,8 @@ class OrderController {
       order.observation = observation || '';
       order.products = products_db;
       order.reference = reference || '';
+      order.sended = true;
       order.total = total;
-      console.log(order.products);
       await orderRepo.save(order);
       if (typeof order.restaurant !== 'string') {
         const restaurantSocketId = req.connectedClients[order.restaurant.id];
@@ -139,7 +140,6 @@ class OrderController {
       );
       return res.json({ response: 'Order successfull created' });
     } catch (error) {
-      console.log(error);
       return res.status(500).json({ error });
     }
   }

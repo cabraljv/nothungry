@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 
 import Order from '../models/Order';
+import { sendMessage } from '../services/WhatsApp';
 
 class OrderAcceptController {
   async store(req: Request, res: Response) {
@@ -9,7 +10,7 @@ class OrderAcceptController {
     const orderRepo = getRepository(Order);
 
     const order = await orderRepo.findOne(orderId, {
-      relations: ['restaurant'],
+      relations: ['restaurant', 'user'],
     });
     if (!order) {
       return res.status(404).json({ error: 'Order does not exists' });
@@ -21,6 +22,12 @@ class OrderAcceptController {
     }
     order.accepted = true;
     orderRepo.save(order);
+    if (typeof order.restaurant !== 'string')
+      sendMessage(
+        order.restaurant.whatsapp_number,
+        order.user.whatsapp,
+        'Seu pedido foi aceito pelo restaurante!',
+      );
     return res.json({ response: 'Order successfull accepted' });
   }
 }
