@@ -5,6 +5,14 @@ import * as Yup from 'yup';
 import Product from '../models/Product';
 
 class ProductControler {
+  async index(req: Request, res: Response) {
+    const productRepo = getRepository(Product);
+    const products = await productRepo.find({
+      where: { restaurant: req.userId },
+    });
+    return res.json(products);
+  }
+
   async store(req: Request, res: Response) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
