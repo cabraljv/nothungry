@@ -112,7 +112,7 @@ export class createOrder1594086536392 implements MigrationInterface {
   private user_fk = new TableForeignKey({
     columnNames: ['user_id'],
     referencedTableName: 'users',
-    onDelete: 'CASCADE',
+    onDelete: '',
     referencedColumnNames: ['id'],
   });
 

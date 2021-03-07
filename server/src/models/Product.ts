@@ -33,7 +33,9 @@ class Product {
   public restaurant: Restaurant | string;
 
   @ManyToMany(() => Order)
-  @JoinTable()
+  @JoinTable({
+    name: 'orders_products_products',
+  })
   public orders: Order[];
 
   @Column()

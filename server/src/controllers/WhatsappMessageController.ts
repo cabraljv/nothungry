@@ -44,7 +44,7 @@ class WhatsappMessageController {
 
           if (order.status === 201) {
             twiml.message(
-              `*Pedido criado com sucesso! Acompanhe em:*\n\nlocalhost:3000/${restaurant.url}?order=${order.order}`,
+              `*Pedido criado com sucesso! Acompanhe em:*\n\nlocalhost:3001/${restaurant.url}?order=${order.order}`,
             );
           } else {
             twiml.message(`Ocorreu um erro ao criar o pedido`);
@@ -58,7 +58,6 @@ class WhatsappMessageController {
           );
           break;
       }
-      console.log(twiml.toString());
       return res.status(200).send(twiml.toString());
     } catch (error) {
       console.log(error);

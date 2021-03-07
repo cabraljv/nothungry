@@ -33,5 +33,7 @@ routes.put('/order/finish/:orderId', OrderFinishController.store);
 routes.get('/order', OrderController.index);
 
 routes.post('/product', uploads.single('image'), ProductController.store);
+routes.put('/product', uploads.single('image'), ProductController.update);
 routes.get('/product', ProductController.index);
+routes.delete('/product/:id', ProductController.destroy);
 export default routes;

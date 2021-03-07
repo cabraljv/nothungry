@@ -45,14 +45,14 @@ export class createProductOrder1594110608384 implements MigrationInterface {
   private restaurantForeginKey = new TableForeignKey({
     columnNames: ['ordersId'],
     referencedTableName: 'orders',
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
     referencedColumnNames: ['id'],
   });
 
   private productForeginKey = new TableForeignKey({
     columnNames: ['productsId'],
     referencedTableName: 'products',
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
     referencedColumnNames: ['id'],
   });
 
