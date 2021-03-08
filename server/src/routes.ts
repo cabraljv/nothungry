@@ -2,6 +2,7 @@ import { Router } from 'express';
 import Multer from 'multer';
 
 import uploadConfig from './config/upload';
+import DashboardController from './controllers/DashboardController';
 import OrderAcceptController from './controllers/OrderAcceptController';
 import OrderController from './controllers/OrderController';
 import OrderDenyController from './controllers/OrderDenyController';
@@ -36,4 +37,6 @@ routes.post('/product', uploads.single('image'), ProductController.store);
 routes.put('/product', uploads.single('image'), ProductController.update);
 routes.get('/product', ProductController.index);
 routes.delete('/product/:id', ProductController.destroy);
+
+routes.get('/dashboard', DashboardController.index);
 export default routes;

@@ -39,7 +39,7 @@ class Restaurant {
   products!: Product[];
 
   @OneToMany(() => Order, order => order.restaurant)
-  orders!: Product[];
+  orders!: Order[];
 }
 
 export default Restaurant;
