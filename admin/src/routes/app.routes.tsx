@@ -6,6 +6,7 @@ import Dashboard from '../pages/Dashboard';
 import Sidebar from '../components/Sidebar';
 import { Container } from './styles';
 import Products from '../pages/Products';
+import Orders from '../pages/Orders';
 
 export default function AppRoutes() {
   return (
@@ -14,6 +15,7 @@ export default function AppRoutes() {
 
       <Container>
         <Route path="/" exact component={Dashboard} />
+        <Route path="/orders" exact component={Orders} />
         <Route path="/products" exact component={Products} />
       </Container>
       <ToastContainer />

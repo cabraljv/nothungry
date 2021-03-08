@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { FiGrid } from 'react-icons/fi';
+import { RiFileList2Fill, RiDashboardFill } from 'react-icons/ri';
 import { MdRestaurant } from 'react-icons/md';
 import { Link, useLocation } from 'react-router-dom';
 import { Container } from './styles';
@@ -17,7 +17,12 @@ const Sidebar: React.FC = () => {
       <ul>
         <li className={search.split('/')[1] === '' ? 'active' : ''}>
           <Link to="/">
-            <FiGrid size={25} /> <p>Pedidos</p>
+            <RiDashboardFill size={25} /> <p>Dashboard</p>
+          </Link>
+        </li>
+        <li className={search.split('/orders')[1] === '' ? 'active' : ''}>
+          <Link to="/orders">
+            <RiFileList2Fill size={25} /> <p>Pedidos</p>
           </Link>
         </li>
         <li className={search.split('/')[1] === 'products' ? 'active' : ''}>
