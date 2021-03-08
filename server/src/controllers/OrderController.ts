@@ -97,12 +97,16 @@ class OrderController {
 
     const productsRepo = getRepository(Product);
 
-    const products_db = await productsRepo.findByIds(products);
+    const products_db: Product[] = await Promise.all(
+      products.map(async (item: string) =>
+        productsRepo.findOne({ where: { id: item } }),
+      ),
+    );
 
     let total = 0;
-    for (let i = 0; i < products_db.length; i += 1) {
-      total += products_db[i].price;
-    }
+    products_db.forEach(item => {
+      total += item.price;
+    });
 
     try {
       const order = await orderRepo.findOne({
