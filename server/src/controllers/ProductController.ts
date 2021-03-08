@@ -7,10 +7,30 @@ import Product from '../models/Product';
 class ProductControler {
   async index(req: Request, res: Response) {
     const productRepo = getRepository(Product);
+
+    const { page } = req.query;
+    let atual_page = 1;
+    try {
+      if (page) atual_page = parseInt(`${page}`, 10);
+    } catch (error) {
+      return res.status(400).json({ error: 'Invalid params' });
+    }
     const products = await productRepo.find({
       where: { restaurant: req.userId },
+      skip: (atual_page - 1) * 10,
+      take: 20,
     });
-    return res.json(products);
+
+    const total_pages = await productRepo.find({
+      where: { restaurant: req.userId },
+    });
+    return res.json({
+      products,
+      pagination: {
+        atual_page,
+        total_pages: (total_pages.length - (total_pages.length % 20)) / 20 + 1,
+      },
+    });
   }
 
   async destroy(req: Request, res: Response) {
