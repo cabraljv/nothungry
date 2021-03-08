@@ -7,6 +7,7 @@ import MaskedInput from 'react-text-mask';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import Paginate from 'react-paginate';
 import { Container } from './styles';
 import api from '../../services/api';
 import Modal from '../../components/Modal';
@@ -22,19 +23,31 @@ interface IProduct {
   created_at: Date;
 }
 
+interface APIResponse {
+  products: IProduct[];
+  pagination: {
+    atual_page: number;
+    total_pages: number;
+  };
+}
+
 const Products: React.FC = () => {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [modalEdit, setModalEdit] = useState<IProduct | null>(null);
   const [modalDelete, setModalDelete] = useState<IProduct | null>(null);
   const [addProduct, setAddProduct] = useState<IProduct>();
+  const [atualPage, setAtualPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const getProducts = useCallback(async () => {
-    const response = await api.get<IProduct[]>('/product');
+    const response = await api.get<APIResponse>(`/product?page=${atualPage}`);
     if (response.status === 200) {
-      setProducts(response.data);
+      setProducts(response.data.products);
+      setAtualPage(response.data.pagination.atual_page);
+      setTotalPages(response.data.pagination.total_pages);
     }
-  }, []);
+  }, [atualPage]);
   useEffect(() => {
     getProducts();
   }, [getProducts]);
@@ -157,6 +170,14 @@ const Products: React.FC = () => {
     }
   }, [modalDelete, getProducts]);
 
+  const handlePageChange = useCallback(
+    ({ selected }) => {
+      setAtualPage(selected);
+      getProducts();
+    },
+    [getProducts]
+  );
+
   return (
     <Container>
       <header>
@@ -206,6 +227,18 @@ const Products: React.FC = () => {
           ))}
         </tbody>
       </table>
+      <Paginate
+        previousLabel="anterior"
+        nextLabel="próxima"
+        breakLabel="..."
+        breakClassName="break-me"
+        pageCount={totalPages}
+        marginPagesDisplayed={2}
+        pageRangeDisplayed={5}
+        onPageChange={handlePageChange}
+        containerClassName="pagination"
+        activeClassName="active"
+      />
       <Modal open={modalDelete !== null}>
         <div className="modal-content">
           <p>
