@@ -79,7 +79,7 @@ const Delivery: React.FC = () => {
         clearCart();
         history.push('finish');
       } catch (error) {
-        toast(error, { type: 'error' });
+        toast(error.message, { type: 'error' });
       }
       setLoading(false);
     },
