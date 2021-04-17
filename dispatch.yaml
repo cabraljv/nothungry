@@ -1,0 +1,3 @@
+dispatch:
+  - url: pedir.nothungry.com.br/* # e.g. subdomain.example.com/*
+    service: default

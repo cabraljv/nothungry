@@ -1,19 +1,31 @@
 import React from 'react';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ptBR } from '@material-ui/core/locale';
 import { BrowserRouter } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import GlobalStyles from './styles/global';
+import { CssBaseline } from '@material-ui/core';
 import Routes from './routes';
-import 'react-toastify/dist/ReactToastify.css';
 
+const theme = createMuiTheme(
+  {
+    palette: {
+      type: 'dark',
+      primary: {
+        main: '#38f9d7',
+        contrastText: '#2d2d2d',
+      },
+    },
+    spacing: 0,
+  },
+  ptBR
+);
 const App: React.FC = () => {
   return (
-    <>
-      <GlobalStyles />
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <BrowserRouter>
         <Routes />
       </BrowserRouter>
-      <ToastContainer />
-    </>
+    </ThemeProvider>
   );
 };
 
