@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { Product } from '../../@types/types';
+import { Product, Addition } from '../../@types/types';
 import { useRestaurant } from '../../hooks/restaurant';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,19 +61,33 @@ const CheckoutCard: React.FC<Props> = ({ handleDelete, data }) => {
     });
     return aux.toFixed(2).replace('.', ',');
   }, [additions, data]);
+  const additionsData = useMemo(() => {
+    const aux = data.additions?.map((item) => {
+      const atualAddition = additions.find((item2) => item2.id === item);
+      if (atualAddition) return atualAddition;
+      return {} as Addition;
+    });
+    return aux || [];
+  }, [additions, data]);
   return (
     <Card className={classes.root}>
       <CardContent className={classes.content}>
         <Typography variant="h6" className={classes.title}>
           {data.name}
         </Typography>
-        <Typography
-          variant="subtitle1"
-          className={classes.description}
-          color="textSecondary"
-        >
-          Adicionais: queijo extra, bacon, cheddar
-        </Typography>
+        {additionsData && additionsData.length > 0 && (
+          <Typography
+            variant="subtitle1"
+            className={classes.description}
+            color="textSecondary"
+          >
+            Adicionais:{' '}
+            {additionsData?.map((item, index) =>
+              index === 0 ? item.description : `, ${item.description}`
+            )}
+          </Typography>
+        )}
+
         <div className={classes.footer}>
           <Typography
             variant="subtitle1"

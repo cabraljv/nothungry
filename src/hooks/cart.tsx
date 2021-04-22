@@ -4,6 +4,7 @@ import { Product } from '../@types/types';
 interface ICartContext {
   products: Product[];
   cartSize: number;
+  resetCart: () => void;
   addProduct: (p: Product) => void;
   removeProduct: (p: Product) => void;
 }
@@ -24,12 +25,17 @@ export const CartProvider: React.FC = ({ children }) => {
     setProducts(aux);
   }
 
+  function resetCart() {
+    setProducts([]);
+  }
+
   return (
     <CartContextData.Provider
       value={{
         products,
         cartSize: products.length,
         addProduct,
+        resetCart,
         removeProduct,
       }}
     >

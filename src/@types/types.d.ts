@@ -24,7 +24,7 @@ export type Addition = {
 };
 
 export type Order = {
-  id: string;
+  restaurant: string;
   reciver: string;
   adress: string;
   observation: string;
@@ -34,4 +34,20 @@ export type Order = {
     id_product: string;
     additions: string[];
   }[];
+};
+
+export type OrderAPI = {
+  restaurant: string;
+  reciver: string;
+  adress: string;
+  observation: string;
+  reference: string;
+  payment_method: number;
+  id: string;
+  sended: boolean;
+  denied: boolean;
+  accepted: boolean;
+  total: number;
+  created_at: string;
+  status: string;
 };

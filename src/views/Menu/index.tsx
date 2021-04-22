@@ -16,6 +16,8 @@ import ProductCard from '../../components/ProductCard';
 import { useRestaurant } from '../../hooks/restaurant';
 import { Product } from '../../@types/types';
 import { useCart } from '../../hooks/cart';
+import MyOrders from './MyOrders';
+import About from './About';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -91,17 +93,25 @@ const Menu: React.FC = () => {
           textColor="primary"
           className={classes.tabs}
           onChange={handleChange}
+          scrollButtons="auto"
           aria-label="disabled tabs example"
         >
-          <Tab label="Lanches" />
-          <Tab label="Bebidas" />
+          <Tab label="LANCHES" />
+          <Tab label="BEBIDAS" />
+          <Tab label="PEDIDOS" />
+          <Tab label="SOBRE" />
         </Tabs>
       </Paper>
-      <ListItems data={value === 0 ? foods : drinks} />
+      {value === 0 && <ListItems data={foods} />}
+      {value === 1 && <ListItems data={drinks} />}
+      {value === 2 && <MyOrders />}
+      {value === 3 && <About />}
+
       <Fab
         color="primary"
         className={classes.floatingButton}
         variant="extended"
+        disabled={cartSize === 0}
         onClick={() => history.push(`/${restaurantId}/checkout`)}
       >
         <ShoppingCartIcon />

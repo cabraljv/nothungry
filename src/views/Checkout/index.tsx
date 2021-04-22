@@ -22,14 +22,15 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import React, { useCallback, useState } from 'react';
+import { isBefore, subMinutes } from 'date-fns';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Product } from '../../@types/types';
 import CheckoutCard from '../../components/CheckoutCard';
 import { useCart } from '../../hooks/cart';
 import { useRestaurant } from '../../hooks/restaurant';
-import { sendOrder } from '../../services/orderApi';
+import { getLastOrder, sendOrder } from '../../services/orderApi';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,12 +43,14 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingTop: theme.spacing(0.4),
       paddingBottom: theme.spacing(0.4),
     },
+
     divisor: {
       marginTop: theme.spacing(1.5),
       marginBottom: theme.spacing(1.5),
     },
     infoInput: {
       marginBottom: theme.spacing(1.5),
+      width: '100%',
     },
   })
 );
@@ -62,18 +65,40 @@ const Checkout: React.FC = () => {
   const [adress, setAdress] = useState('');
   const [reference, setReference] = useState('');
   const [name, setName] = useState('');
-  const { products, removeProduct } = useCart();
+  const { products, removeProduct, resetCart, cartSize } = useCart();
   const [money, setMoney] = useState<number | null>(null);
   const { order } = useRestaurant();
   const [toRemove, setToRemove] = useState<Product | null>(null);
 
   const history = useHistory();
   const { restaurantId } = useParams<Params>();
+  const { id: resID } = useRestaurant();
 
+  const [hasConfirmed, setHasConfirmed] = useState(true);
+  useEffect(() => {
+    const lastOrder = getLastOrder(resID);
+
+    if (lastOrder) {
+      const lastOrderDate = new Date(lastOrder.created_at);
+      const atualDate = new Date();
+      const aux = subMinutes(atualDate, 30);
+      if (isBefore(aux, lastOrderDate)) {
+        setHasConfirmed(false);
+      }
+    }
+  }, []);
+  useEffect(() => {
+    if (cartSize === 0) {
+      history.push(`/${restaurantId}`);
+    }
+  }, [cartSize, history, restaurantId]);
   const handleRemove = useCallback(() => {
     if (toRemove) removeProduct(toRemove);
+    if (cartSize === 1) {
+      history.push(`/${restaurantId}`);
+    }
     setToRemove(null);
-  }, [toRemove, removeProduct]);
+  }, [toRemove, removeProduct, cartSize, history, restaurantId]);
 
   const handleSubmit = useCallback(async () => {
     if (adress === '' || obs === '' || reference === '' || name === '') {
@@ -82,6 +107,7 @@ const Checkout: React.FC = () => {
       });
       return;
     }
+
     try {
       const products_send = products.map((item) => ({
         id_product: item.id,
@@ -90,29 +116,38 @@ const Checkout: React.FC = () => {
       if (value === 1) {
         await sendOrder({
           adress,
+          restaurant: resID,
           reference,
-          id: order,
           observation: `${obs} - Troco para ${money}`,
           payment_method: value,
           products: products_send,
           reciver: name,
         });
+        resetCart();
+        toast('Pedido criado com sucesso', {
+          type: 'success',
+          position: 'bottom-center',
+        });
+        history.push(`/${restaurantId}/finish`);
         return;
       }
       await sendOrder({
         adress,
         reference,
-        id: order,
+        restaurant: resID,
         observation: obs,
         payment_method: value,
         products: products_send,
         reciver: name,
       });
+      resetCart();
       toast('Pedido criado com sucesso', {
         type: 'success',
+        position: 'bottom-center',
       });
       history.push(`/${restaurantId}/finish`);
     } catch (error) {
+      console.log(error);
       toast('Ocorreu um erro ao enviar o pedido', {
         type: 'error',
       });
@@ -147,7 +182,7 @@ const Checkout: React.FC = () => {
         <Divider className={classes.divisor} />
       </List>
       <Typography variant="h6">INFORMAÇÕES</Typography>
-      <FormControl style={{ width: '100%' }}>
+      <div style={{ width: '100%' }}>
         <TextField
           label="Observação"
           multiline
@@ -226,16 +261,11 @@ const Checkout: React.FC = () => {
         >
           ENVIAR PEDIDO
         </Button>
-      </FormControl>
-      <Dialog
-        open={!!toRemove}
-        onClose={() => setToRemove(null)}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">Remover item?</DialogTitle>
+      </div>
+      <Dialog open={!!toRemove} onClose={() => setToRemove(null)}>
+        <DialogTitle>Remover item?</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText>
             Você tem certeza que deseja remover esse item do carrinho?
           </DialogContentText>
         </DialogContent>
@@ -243,6 +273,26 @@ const Checkout: React.FC = () => {
           <Button onClick={() => setToRemove(null)}>Cancelar</Button>
           <Button onClick={handleRemove} color="primary" autoFocus>
             Remover
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog open={!hasConfirmed} onClose={() => setHasConfirmed(true)}>
+        <DialogTitle>Atenção</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Você já realizou um pedido nos ultimos 30 minutos, deseja continuar?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => history.push(`/${restaurantId}`)}>
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => setHasConfirmed(true)}
+            color="primary"
+            autoFocus
+          >
+            Continuar
           </Button>
         </DialogActions>
       </Dialog>

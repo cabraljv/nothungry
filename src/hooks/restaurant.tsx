@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import { Addition, Product, Restaurant } from '../@types/types';
+import logo from '../assets/logo.svg';
 
 interface IRestaurantContext {
   id: string;
@@ -7,6 +8,7 @@ interface IRestaurantContext {
   name: string;
   order: string;
   logo: string;
+  phone: string;
   additions: Addition[];
   updateOrder: (a: string) => void;
   getProduct: (id: string) => Product | undefined;
@@ -43,9 +45,10 @@ export const RestaurantProvider: React.FC = ({ children }) => {
         name: restaurant.name,
         getProduct,
         id: restaurant.id,
-        logo: restaurant.img_path,
+        logo: restaurant.img_path || logo,
         products: restaurant.products,
         order,
+        phone: restaurant.phone || '',
         updateOrder: setOrder,
         additions: restaurant.additions,
         updateData,
